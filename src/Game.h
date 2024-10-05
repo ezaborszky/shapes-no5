@@ -1,3 +1,12 @@
 #pragma once
 
-void printShit();
+#include <SFML/Graphics/RenderWindow.hpp>
+class Game
+{
+  sf::RenderWindow m_window;
+
+  public:
+
+  Game();
+  void run();
+};
