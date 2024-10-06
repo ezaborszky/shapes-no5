@@ -2,6 +2,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <iostream>
 #include <imgui-SFML.h>
@@ -33,6 +34,7 @@ void Game::run()
   while(m_window.isOpen())
   {
     sf::Event event;
+    entityManager.update();
     while(m_window.pollEvent(event))
     {
       ImGui::SFML::ProcessEvent(event);
@@ -42,17 +44,20 @@ void Game::run()
         m_window.close();
       }
 
-      if(event.type == sf::Event::KeyPressed)
+      if(event.key.code == sf::Keyboard::Y)
       {
         std::cout << "asd " << std::endl;
         auto a = entityManager.addEntity("alma");
-        a->name = "korte";
         a->cShape = std::make_shared<CShape>(15,20);
         a->cShape->circle.setPosition(pos,pos);
         a->cShape->circle.setFillColor(sf::Color(255,100,255));
         pos += 10; 
-          
+      }
 
+      if(event.key.code == sf::Keyboard::X)
+      {
+        entityManager.getEntitites().back()->destroy(); 
+        pos -= 10;
       }
     }
     

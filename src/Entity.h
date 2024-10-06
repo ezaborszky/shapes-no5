@@ -5,11 +5,20 @@
 
 class Entity
 {
-  public:
+  friend class EntityManager;
+  bool m_active = true;
   std::string m_tag = "default";
+
+  //constructor and deconstructor
   Entity(const std::string &tag);
-  std::string returnName() const; 
-  std::string name;
+  
+  public:
   std::shared_ptr<CShape> cShape;
+  std::shared_ptr<CTransform> cTransform;
+
+  bool isActive() const;
+  const std::string &tag() const;
+  const size_t id() const;
+  void destroy();
 };
 

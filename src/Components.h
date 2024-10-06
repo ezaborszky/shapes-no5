@@ -12,3 +12,10 @@ class CShape
 
     }
 };
+
+class CTransform
+{
+  public:
+    int x;
+    int y;
+};
