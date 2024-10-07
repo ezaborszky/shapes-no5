@@ -1,12 +1,14 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <memory>
 #include "EntityManager.h"
 class Game
 {
-  sf::RenderWindow m_window;
-
   public:
+  sf::RenderWindow m_window;
+  std::shared_ptr<Entity> m_player;
+  
   
   EntityManager entityManager;
   Game();

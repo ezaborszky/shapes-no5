@@ -9,6 +9,8 @@
 #include <imgui.h>
 #include <memory>
 #include "EntityManager.h"
+#include "Systems.h"
+
 
 Game::Game()
 {
@@ -35,31 +37,10 @@ void Game::run()
   {
     sf::Event event;
     entityManager.update();
-    while(m_window.pollEvent(event))
-    {
-      ImGui::SFML::ProcessEvent(event);
-
-      if(event.type == sf::Event::Closed)
-      {
-        m_window.close();
-      }
-
-      if(event.key.code == sf::Keyboard::Y)
-      {
-        std::cout << "asd " << std::endl;
-        auto a = entityManager.addEntity("alma");
-        a->cShape = std::make_shared<CShape>(15,20);
-        a->cShape->circle.setPosition(pos,pos);
-        a->cShape->circle.setFillColor(sf::Color(255,100,255));
-        pos += 10; 
-      }
-
-      if(event.key.code == sf::Keyboard::X)
-      {
-        entityManager.getEntitites().back()->destroy(); 
-        pos -= 10;
-      }
-    }
+    ImGui::SFML::ProcessEvent(event);
+    
+    userInput(m_window, m_player, event);    
+    
     
     ImGui::SFML::Update(m_window, deltaClock.restart());
     ImGui::ShowDemoWindow();
