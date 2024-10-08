@@ -40,8 +40,9 @@ void Game::run()
     ImGui::SFML::ProcessEvent(event);
     
     userInput(m_window, m_player, event);    
-    
-    
+    sMovePlayer(m_player);
+    sHandleMotion(entityManager.getEntitites());
+
     ImGui::SFML::Update(m_window, deltaClock.restart());
     ImGui::ShowDemoWindow();
     m_window.clear();
@@ -50,4 +51,12 @@ void Game::run()
     m_window.display();
   } 
   ImGui::SFML::Shutdown();
+}
+
+void Game::spawnPlayer()
+{
+  m_player = entityManager.addEntity("player");
+  m_player->cShape = std::make_shared<CShape>(40, 7);
+
+
 }

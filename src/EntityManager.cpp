@@ -30,7 +30,7 @@ void EntityManager::update()
 
 }
 
-EntityVec EntityManager::getEntitites()
+EntityVec& EntityManager::getEntitites()
 {
   return m_entities;
 }

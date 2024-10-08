@@ -14,4 +14,5 @@ class Game
   Game();
   void run();
   void sRender(sf::RenderWindow &window);
+  void spawnPlayer();
 };

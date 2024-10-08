@@ -48,8 +48,7 @@ Vec2::Vec2(float xin, float yin)
         return (x == v.x) && (y == v.y);
     }
 
-
-
+    
 
 
 
