@@ -15,6 +15,7 @@ class Entity
   public:
   std::shared_ptr<CShape> cShape;
   std::shared_ptr<CTransform> cTransform;
+  std::shared_ptr<CInput> cInput; 
 
   bool isActive() const;
   const std::string &tag() const;
