@@ -4,7 +4,7 @@
 #include "Vec2.h"
 
 class CTransform
-{
+{public:
   Vec2 pos = {0.0, 0.0};
   Vec2 speed = {0.0, 0.0};
   int rotation = 0;
@@ -24,7 +24,16 @@ class CShape
     }
 };
 
-
+class CInput
+{
+  public:
+    bool left = false;
+    bool right = false;
+    bool up = false;
+    bool down = false;
+    bool pause = false;
+    CInput(){};
+};
 
 
 
