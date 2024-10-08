@@ -1,3 +1,4 @@
+#include <SFML/System/Vector2.hpp>
 #include <math.h>
 #include "Vec2.h"
 
@@ -48,7 +49,11 @@ Vec2::Vec2(float xin, float yin)
         return (x == v.x) && (y == v.y);
     }
 
-    
+sf::Vector2f Vec2::getVec2f()
+{
+ return sf::Vector2f(x,y);
+  
+}
 
 
 

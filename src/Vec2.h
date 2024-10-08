@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SFML/System/Vector2.hpp>
 class Vec2
 {
   public:
@@ -17,5 +18,6 @@ class Vec2
     float dist(Vec2 v);
     float length();
     bool operator ==(Vec2 v);
+    sf::Vector2f getVec2f();
 };
 

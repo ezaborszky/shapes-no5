@@ -1,9 +1,10 @@
 #include "Systems.h"
 #include "EntityManager.h"
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Window.hpp>
-#include <iostream>
 #include <memory>
+#include <iostream>
 
 
 //USER INPUT -----------------------------------------------------------------------------
@@ -70,16 +71,17 @@ void userInput(sf::Window &window, std::shared_ptr<Entity> player, sf::Event& ev
 
 void sMovePlayer(std::shared_ptr<Entity> player)
     {
-      player->cTransform->speed.x = (player->cInput->left) ? -5 : 0;
-      player->cTransform->speed.x = (player->cInput->right) ? 5 : 0;
-      player->cTransform->speed.x = (player->cInput->up) ? 5 : 0;
-      player->cTransform->speed.x = (player->cInput->down) ? -5 : 0;
+      player->cTransform->speed.x = (player->cInput->left) ? -5 : (player->cInput->right ? 5 : 0);
+      player->cTransform->speed.y = (player->cInput->down) ? 5 : (player->cInput->up ? -5 : 0);
     }
 
 void sHandleMotion(EntityVec &vec)
 {
-  for(auto a : vec)
+  for(auto& a : vec)
   {
     a->cTransform->pos = a->cTransform->pos + a->cTransform->speed;
+
+    a->cShape->circle.setPosition(a->cTransform->pos.getVec2f());
+
   }
 }
