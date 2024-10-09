@@ -1,4 +1,5 @@
 #include "Systems.h"
+#include "Components.h"
 #include "EntityManager.h"
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -83,5 +84,33 @@ void sHandleMotion(EntityVec &vec)
 
     a->cShape->circle.setPosition(a->cTransform->pos.getVec2f());
 
+  }
+}
+
+Vec2 sDirection(Vec2 start, Vec2 target)
+{
+    Vec2 direction = Vec2(target.x - start.x, target.y - start.y);
+
+    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+    Vec2 finDir;
+    finDir.x = direction.x / length;
+    finDir.y = direction.y / length;
+
+    return finDir;
+}
+
+
+void sShoot(sf::Event &event, std::shared_ptr<Entity> player, EntityManager& entityManager, sf::Window& window)
+{
+  if(event.type == sf::Event::MouseButtonPressed)
+  {
+    Vec2 playLoc = player->cTransform->pos;
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    Vec2 mousePosVec = {(float)mousePos.y, (float)mousePos.x};
+    Vec2 shootDir = sDirection(playLoc, mousePosVec);
+    auto bullet = entityManager.addEntity("bullet");
+    bullet->cShape = std::make_shared<CShape>(10,20);
+    bullet->cTransform = std::make_shared<CTransform>(playLoc, shootDir, 0);
   }
 }
