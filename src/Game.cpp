@@ -43,6 +43,7 @@ void Game::run()
     //INPUT AND MOVEMENT
     userInput(m_window, m_player, event);    
     sMovePlayer(m_player);
+    sShoot(event, m_player, entityManager, m_window); 
     sHandleMotion(entityManager.getEntitites());
 
     ImGui::SFML::Update(m_window, deltaClock.restart());
