@@ -4,6 +4,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Window.hpp>
+#include <cmath>
 #include <memory>
 #include <iostream>
 
@@ -80,7 +81,11 @@ void sHandleMotion(EntityVec &vec)
 {
   for(auto& a : vec)
   {
-    a->cTransform->pos = a->cTransform->pos + a->cTransform->speed;
+    
+   int speedMulti = (a->tag() == "bullet") ? 5 : 1; 
+
+    
+    a->cTransform->pos = a->cTransform->pos + a->cTransform->speed ;
 
     a->cShape->circle.setPosition(a->cTransform->pos.getVec2f());
 
@@ -89,28 +94,15 @@ void sHandleMotion(EntityVec &vec)
 
 Vec2 sDirection(Vec2 start, Vec2 target)
 {
-    Vec2 direction = Vec2(target.x - start.x, target.y - start.y);
+  std::cout << "Start X: " << start.x << " Y : " << start.y << std::endl;
+  std::cout << "Mouse X: " << target.x << " Y : " << target.y << std::endl;
+  Vec2 difVec = target - start;
+  std::cout << "Difference X: " << difVec.x << " Y: " << difVec.y << std::endl;
+  float length = sqrt((difVec.x * difVec.x) + (difVec.y * difVec.y));
+  std::cout << "Length: " << length << std::endl;
+  Vec2 normalVec = {difVec.x/length, difVec.y/length};
 
-    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-
-    Vec2 finDir;
-    finDir.x = direction.x / length;
-    finDir.y = direction.y / length;
-
-    return finDir;
+  return normalVec;
 }
 
 
-void sShoot(sf::Event &event, std::shared_ptr<Entity> player, EntityManager& entityManager, sf::Window& window)
-{
-  if(event.type == sf::Event::MouseButtonPressed)
-  {
-    Vec2 playLoc = player->cTransform->pos;
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-    Vec2 mousePosVec = {(float)mousePos.y, (float)mousePos.x};
-    Vec2 shootDir = sDirection(playLoc, mousePosVec);
-    auto bullet = entityManager.addEntity("bullet");
-    bullet->cShape = std::make_shared<CShape>(10,20);
-    bullet->cTransform = std::make_shared<CTransform>(playLoc, shootDir, 0);
-  }
-}
