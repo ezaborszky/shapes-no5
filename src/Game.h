@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Event.hpp>
 #include <memory>
 #include "EntityManager.h"
 
@@ -27,9 +28,9 @@ class Game
   void sRender(sf::RenderWindow &window);
   void spawnPlayer();
   void spawnBullet();
-
+  void sLifeSpan();
+  void sShoot(sf::Event& event);
 };
-
 
 
   

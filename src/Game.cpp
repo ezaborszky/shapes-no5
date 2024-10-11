@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
+#include <SFML/System/Err.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/VideoMode.hpp>
@@ -44,8 +45,8 @@ void Game::run()
     userInput(m_window, m_player, event);    
     sMovePlayer(m_player);
     sHandleMotion(entityManager.getEntitites());
-    if(event.type == sf::Event::MouseButtonPressed) spawnBullet();
-
+    sLifeSpan();
+    sShoot(event);
     ImGui::SFML::Update(m_window, deltaClock.restart());
    m_window.clear();
     sRender(m_window);
@@ -71,17 +72,94 @@ void Game::spawnPlayer()
 
 void Game::spawnBullet()
 {
-  if((m_currentFrame - m_lastBullet) > 20)
+  if(m_currentFrame % 10 == 0)
   {   Vec2 radius = {m_player->cShape->circle.getRadius()/2,m_player->cShape->circle.getRadius()/2};
       Vec2 playLoc = m_player->cTransform->pos;
-      sf::Vector2i mousePos = sf::Mouse::getPosition(m_window);
-      Vec2 mousePosVec = {(float)mousePos.x, (float)mousePos.y};
+      //sf::Vector2i mousePos = sf::Mouse::getPosition(m_window);
+      sf::Vector2i mousePos = sf::Mouse::getPosition(m_window);  // Mouse position in window coordinates
+      sf::Vector2f worldPos = m_window.mapPixelToCoords(mousePos);  // Convert to world coordinates
+      Vec2 mousePosVec = {worldPos.x, worldPos.y};
+
+
+     // Vec2 mousePosVec = {(float)mousePos.x, (float)mousePos.y};
       Vec2 shootDir = sDirection(playLoc, mousePosVec);
       auto bullet = entityManager.addEntity("bullet");
       bullet->cShape = std::make_shared<CShape>(10,20);
       playLoc = {playLoc.x -5, playLoc.y -5}; 
       bullet->cTransform = std::make_shared<CTransform>(playLoc, shootDir, 0);
+      bullet->cLifeSpan = std::make_shared<CLifeSpan>(100);
       std::cout << "Normal vector X: " << shootDir.x << " Y: " << shootDir.y << std::endl;
       m_lastBullet = m_currentFrame;
   }
+}
+
+void Game::sLifeSpan()
+{
+    for (const auto &a : (entityManager.getEntitites()))
+    {
+        if (a->cLifeSpan)
+        {
+            a->cLifeSpan->lifeSpan--;
+            if (a->cLifeSpan->lifeSpan <= 0)
+            {
+                a->destroy();
+                return;
+            }
+
+            float alphaDecrease = (255.f / a->cLifeSpan->lifeSpan);
+
+            sf::Color currentColor = a->cShape->circle.getFillColor();
+
+            if (alphaDecrease > currentColor.a)
+            {
+                currentColor.a = 0; // Ensure alpha doesn't go negative
+            }
+            else
+            {
+                currentColor.a -= static_cast<sf::Uint8>(alphaDecrease);
+            }
+
+            a->cShape->circle.setFillColor(currentColor);
+
+            
+            sf::Color currentColorOut = a->cShape->circle.getOutlineColor();
+
+            if (alphaDecrease > currentColorOut.a)
+            {
+                currentColorOut.a = 0; // Ensure alpha doesn't go negative
+            }
+            else
+            {
+                currentColorOut.a -= static_cast<sf::Uint8>(alphaDecrease);
+            }
+
+            a->cShape->circle.setOutlineColor(currentColorOut);
+        }
+    }
+}
+
+
+void Game::sShoot(sf::Event& event)
+{
+  bool shooting = false;  // Track if the player is shooting
+
+// Inside your event loop
+if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+{
+    shooting = true;  // Start shooting on initial press
+}
+
+// Check for mouse hold in the game loop
+if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+{
+    if ((m_currentFrame - m_lastBullet) > 1)  // Fire based on your frame interval
+    {
+        spawnBullet();
+    }
+}
+else
+{
+    shooting = false;  // Stop shooting when mouse button is released
+}
+
 }

@@ -82,10 +82,10 @@ void sHandleMotion(EntityVec &vec)
   for(auto& a : vec)
   {
     
-   int speedMulti = (a->tag() == "bullet") ? 5 : 1; 
+   int speedMulti = (a->tag() == "bullet") ? 10 : 1; 
 
     
-    a->cTransform->pos = a->cTransform->pos + a->cTransform->speed ;
+    a->cTransform->pos = a->cTransform->pos + a->cTransform->speed * speedMulti ;
 
     a->cShape->circle.setPosition(a->cTransform->pos.getVec2f());
 

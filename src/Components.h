@@ -36,6 +36,15 @@ class CInput
 };
 
 
-
+class CLifeSpan
+{
+  public:
+  int lifeSpan = 0;
+  int maxLifeSpan = 0;
+  CLifeSpan(int time) 
+    :lifeSpan(time)
+     ,maxLifeSpan(time)
+  {};
+};
 
 
