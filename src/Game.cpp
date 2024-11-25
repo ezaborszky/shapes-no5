@@ -1,10 +1,12 @@
 #include "Game.h"
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Err.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/VideoMode.hpp>
+#include <cmath>
 #include <iostream>
 #include <imgui-SFML.h>
 #include <imgui.h>
@@ -46,6 +48,7 @@ void Game::run()
     sMovePlayer(m_player);
     sHandleMotion(entityManager.getEntitites());
     sLifeSpan();
+    spawnEnemy();
     sShoot(event);
     ImGui::SFML::Update(m_window, deltaClock.restart());
    m_window.clear();
@@ -70,6 +73,32 @@ void Game::spawnPlayer()
   m_player->cShape->circle.setOrigin(m_player->cShape->circle.getRadius(), m_player->cShape->circle.getRadius());
 }
 
+void Game::spawnEnemy()
+{
+  if( (m_currentFrame - m_lastEnemy) > 100 )
+  {
+    auto enemy = entityManager.addEntity("enemy");
+    enemy->cShape = std::make_shared<CShape>(22, 5);
+    enemy->cTransform = std::make_shared<CTransform>(Vec2(555,555), Vec2(5,5), 11);
+    enemy->cShape->circle.setFillColor(sf::Color::Transparent);
+    enemy->cShape->circle.setOutlineThickness(5.f);
+    m_lastEnemy = m_currentFrame;
+
+  }
+}
+
+float Game::distance(Vec2 first, Vec2 last)
+{
+  float xDif = first.x - last.x;
+
+  float yDif = first.y - last.y;
+
+  float dist = sqrt((xDif*xDif)+(yDif*yDif));
+
+}
+
+void Ga
+
 void Game::spawnBullet()
 {
   if(m_currentFrame % 10 == 0)
@@ -88,7 +117,7 @@ void Game::spawnBullet()
       playLoc = {playLoc.x -5, playLoc.y -5}; 
       bullet->cTransform = std::make_shared<CTransform>(playLoc, shootDir, 0);
       bullet->cLifeSpan = std::make_shared<CLifeSpan>(100);
-      std::cout << "Normal vector X: " << shootDir.x << " Y: " << shootDir.y << std::endl;
+      //std::cout << "Normal vector X: " << shootDir.x << " Y: " << shootDir.y << std::endl;
       m_lastBullet = m_currentFrame;
   }
 }

@@ -1,6 +1,7 @@
 #include "Systems.h"
 #include "Components.h"
 #include "EntityManager.h"
+#include "Vec2.h"
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Window.hpp>
@@ -84,6 +85,13 @@ void sHandleMotion(EntityVec &vec)
     
    int speedMulti = (a->tag() == "bullet") ? 10 : 1; 
 
+    if(a->tag() == "enemy")
+    {
+      Vec2 futureLocation = a->cTransform->pos + a->cTransform->speed;
+
+      if(futureLocation.x >= 1024 || futureLocation.x <= 0) a->cTransform->speed.x *= -1;
+      if(futureLocation.y >= 768 || futureLocation.y <= 0) a->cTransform->speed.y *= -1;
+    }
     
     a->cTransform->pos = a->cTransform->pos + a->cTransform->speed * speedMulti ;
 
@@ -94,12 +102,12 @@ void sHandleMotion(EntityVec &vec)
 
 Vec2 sDirection(Vec2 start, Vec2 target)
 {
-  std::cout << "Start X: " << start.x << " Y : " << start.y << std::endl;
-  std::cout << "Mouse X: " << target.x << " Y : " << target.y << std::endl;
+  //std::cout << "Start X: " << start.x << " Y : " << start.y << std::endl;
+  //std::cout << "Mouse X: " << target.x << " Y : " << target.y << std::endl;
   Vec2 difVec = target - start;
-  std::cout << "Difference X: " << difVec.x << " Y: " << difVec.y << std::endl;
+  //std::cout << "Difference X: " << difVec.x << " Y: " << difVec.y << std::endl;
   float length = sqrt((difVec.x * difVec.x) + (difVec.y * difVec.y));
-  std::cout << "Length: " << length << std::endl;
+  //std::cout << "Length: " << length << std::endl;
   Vec2 normalVec = {difVec.x/length, difVec.y/length};
 
   return normalVec;

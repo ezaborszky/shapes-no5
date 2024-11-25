@@ -30,6 +30,9 @@ class Game
   void spawnBullet();
   void sLifeSpan();
   void sShoot(sf::Event& event);
+  void spawnEnemy();
+  float distance(Vec2 first, Vec2 second);
+  void sdetectCol();
 };
 
 
