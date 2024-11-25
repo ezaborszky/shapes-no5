@@ -50,6 +50,7 @@ void Game::run()
     sLifeSpan();
     spawnEnemy();
     sShoot(event);
+    sdetectCol();
     ImGui::SFML::Update(m_window, deltaClock.restart());
    m_window.clear();
     sRender(m_window);
@@ -95,9 +96,26 @@ float Game::distance(Vec2 first, Vec2 last)
 
   float dist = sqrt((xDif*xDif)+(yDif*yDif));
 
+  return dist;
+
 }
 
-void Ga
+void Game::sdetectCol()
+{
+
+  for (auto &ent : (entityManager.getEntitites("enemy")) )  {
+    for (auto &bul : (entityManager.getEntitites("bullet")))  {
+      Vec2 enemyPos = ent->cTransform->pos;
+      Vec2 bulletPos = bul->cTransform->pos;
+
+      if(distance(enemyPos,bulletPos) < 55) {
+        ent->destroy();
+        bul->destroy();
+      }
+    }
+  }
+
+} 
 
 void Game::spawnBullet()
 {

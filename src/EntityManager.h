@@ -19,4 +19,5 @@ class EntityManager
     void removeDeadEntities(EntityVec& vec);
     void update();
     EntityVec& getEntitites();
+    EntityVec& getEntitites(const std::string &tag);
 };

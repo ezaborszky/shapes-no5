@@ -1,4 +1,5 @@
 #include "EntityManager.h"
+#include <string>
 
 std::shared_ptr<Entity> EntityManager::addEntity(const std::string &tag)
 {
@@ -33,6 +34,11 @@ void EntityManager::update()
 EntityVec &EntityManager::getEntitites()
 {
   return m_entities;
+}
+
+EntityVec &EntityManager::getEntitites(const std::string& tag)
+{
+  return m_entityMap[tag];
 }
 
 EntityManager::EntityManager(){};
