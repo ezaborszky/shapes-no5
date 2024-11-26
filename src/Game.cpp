@@ -13,6 +13,7 @@
 #include <memory>
 #include "EntityManager.h"
 #include "Systems.h"
+#include "Utility.h"
 
 
 Game::Game()
@@ -80,7 +81,15 @@ void Game::spawnEnemy()
   {
     auto enemy = entityManager.addEntity("enemy");
     enemy->cShape = std::make_shared<CShape>(22, 5);
-    enemy->cTransform = std::make_shared<CTransform>(Vec2(555,555), Vec2(5,5), 11);
+    int horPos = randomNumber(0,1024);
+    int vertPos = randomNumber(0,768);
+    int speed1 = randomNumber(0,10);
+    int speed2 = randomNumber(0,10);
+    if(speed1 <= 5) speed1 *= -1;
+    if(speed1 > 5) speed1 = speed1 - 5;
+    if(speed2 <= 5) speed1 *= -1;
+    if(speed2 > 5) speed2 = speed2 - 5;
+    enemy->cTransform = std::make_shared<CTransform>(Vec2(horPos,vertPos), Vec2(speed1,speed2), 11);
     enemy->cShape->circle.setFillColor(sf::Color::Transparent);
     enemy->cShape->circle.setOutlineThickness(5.f);
     m_lastEnemy = m_currentFrame;
