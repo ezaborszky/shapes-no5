@@ -8,9 +8,8 @@ class Entity
   friend class EntityManager;
   bool m_active = true;
   std::string m_tag = "default";
-
   //constructor and deconstructor
-  Entity(const std::string &tag);
+  Entity(const std::string &tag, int id);
   
   public:
   std::shared_ptr<CShape> cShape;
@@ -20,7 +19,8 @@ class Entity
   std::string test = "asd";
   bool isActive() const;
   const std::string &tag() const;
-  const size_t id() const;
+  int id();
+  int m_id = 0;
   void destroy();
 };
 

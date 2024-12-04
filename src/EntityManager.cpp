@@ -1,9 +1,9 @@
 #include "EntityManager.h"
 #include <string>
 
-std::shared_ptr<Entity> EntityManager::addEntity(const std::string &tag)
+std::shared_ptr<Entity> EntityManager::addEntity(const std::string &tag, int id)
 {
-  auto e = std::shared_ptr<Entity>(new Entity(tag));
+  auto e = std::shared_ptr<Entity>(new Entity(tag, id));
   m_entitiesToAdd.push_back(e);
   return e;
 } 

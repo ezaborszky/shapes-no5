@@ -23,6 +23,7 @@ class Game
   unsigned int m_currentFrame = 0;
   unsigned int m_lastBullet = 0;
   unsigned int m_lastEnemy = 0;
+  int m_currentId = 0; 
   Game();
   void run();
   void sRender(sf::RenderWindow &window);

@@ -11,6 +11,7 @@
 #include <imgui-SFML.h>
 #include <imgui.h>
 #include <memory>
+#include <string>
 #include "EntityManager.h"
 #include "Systems.h"
 #include "Utility.h"
@@ -36,11 +37,11 @@ void Game::setupImGui()
 {
     ImGui::Begin("Control Panel");
     for (const auto &entity : entityManager.getEntitites())
-    {
-        ImVec4 col((entity->cShape->circle.getOutlineColor().r / 255.f), (entity->cShape->circle.getOutlineColor().g / 255.f), (entity->cShape->circle.getOutlineColor().b / 255.f), 1.0f);
-        ImGui::TextColored(col, "%zu %.1f %.1f", "asd", entity->cTransform->pos.y, entity->cTransform->pos.x);
+    {   
+        ImGui::Text("%s %2.f %.2f %d",entity->tag().c_str(), entity->cTransform->pos.y, entity->cTransform->pos.x, entity->id());
     }
     ImGui::End();
+  
 }
 
 void Game::run()
@@ -60,25 +61,25 @@ void Game::run()
     sMovePlayer(m_player);
     sHandleMotion(entityManager.getEntitites());
     sLifeSpan();
-    setupImGui();
     spawnEnemy();
     sShoot(event);
     sdetectCol();
     ImGui::SFML::Update(m_window, deltaClock.restart());
    m_window.clear();
     sRender(m_window);
-    ImGui::ShowDemoWindow();
-    ImGui::SFML::Render(m_window);
+    /* ImGui::ShowDemoWindow(); */
     entityManager.update();
-    m_window.display();
+    setupImGui();
+    ImGui::SFML::Render(m_window);
     m_currentFrame++;
+    m_window.display();
   } 
   ImGui::SFML::Shutdown();
 }
 
 void Game::spawnPlayer()
 {
-  m_player = entityManager.addEntity("player");
+  m_player = entityManager.addEntity("player", m_currentId);
   m_player->cShape = std::make_shared<CShape>(40, 7);
   m_player->cTransform = std::make_shared<CTransform>(Vec2(20,20), Vec2(5.f,5.f), 0);
   m_player->cInput = std::make_shared<CInput>();
@@ -86,13 +87,14 @@ void Game::spawnPlayer()
   m_player->cShape->circle.setOutlineThickness(3);
   m_player->cShape->circle.setOutlineColor(sf::Color(255, 0, 0));
   m_player->cShape->circle.setOrigin(m_player->cShape->circle.getRadius(), m_player->cShape->circle.getRadius());
+  m_currentId++;
 }
 
 void Game::spawnEnemy()
 {
   if( (m_currentFrame - m_lastEnemy) > 100 )
   {
-    auto enemy = entityManager.addEntity("enemy");
+    auto enemy = entityManager.addEntity("enemy", m_currentId);
     enemy->cShape = std::make_shared<CShape>(22, randomNumber(1, 8));
     int horPos = randomNumber(0,1024);
     int vertPos = randomNumber(0,768);
@@ -110,6 +112,7 @@ void Game::spawnEnemy()
     enemy->cShape->circle.setOutlineThickness(3.f);
     enemy->cShape->circle.setOutlineColor(sf::Color(r,g,b));
     enemy->cShape->circle.setFillColor(sf::Color(r,g,b));
+    m_currentId++;
         
     m_lastEnemy = m_currentFrame;
 
@@ -158,13 +161,14 @@ void Game::spawnBullet()
 
      // Vec2 mousePosVec = {(float)mousePos.x, (float)mousePos.y};
       Vec2 shootDir = sDirection(playLoc, mousePosVec);
-      auto bullet = entityManager.addEntity("bullet");
+      auto bullet = entityManager.addEntity("bullet", m_currentId);
       bullet->cShape = std::make_shared<CShape>(10,20);
       playLoc = {playLoc.x -5, playLoc.y -5}; 
       bullet->cTransform = std::make_shared<CTransform>(playLoc, shootDir, 0);
       bullet->cLifeSpan = std::make_shared<CLifeSpan>(100);
       //std::cout << "Normal vector X: " << shootDir.x << " Y: " << shootDir.y << std::endl;
       m_lastBullet = m_currentFrame;
+      m_currentId++;
   }
 }
 
