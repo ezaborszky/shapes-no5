@@ -32,6 +32,17 @@ void Game::sRender(sf::RenderWindow &window)
 
 }
 
+void Game::setupImGui()
+{
+    ImGui::Begin("Control Panel");
+    for (const auto &entity : entityManager.getEntitites())
+    {
+        ImVec4 col((entity->cShape->circle.getOutlineColor().r / 255.f), (entity->cShape->circle.getOutlineColor().g / 255.f), (entity->cShape->circle.getOutlineColor().b / 255.f), 1.0f);
+        ImGui::TextColored(col, "%zu %.1f %.1f", "asd", entity->cTransform->pos.y, entity->cTransform->pos.x);
+    }
+    ImGui::End();
+}
+
 void Game::run()
 { 
   spawnPlayer();
@@ -49,12 +60,14 @@ void Game::run()
     sMovePlayer(m_player);
     sHandleMotion(entityManager.getEntitites());
     sLifeSpan();
+    setupImGui();
     spawnEnemy();
     sShoot(event);
     sdetectCol();
     ImGui::SFML::Update(m_window, deltaClock.restart());
    m_window.clear();
     sRender(m_window);
+    ImGui::ShowDemoWindow();
     ImGui::SFML::Render(m_window);
     entityManager.update();
     m_window.display();
@@ -80,7 +93,7 @@ void Game::spawnEnemy()
   if( (m_currentFrame - m_lastEnemy) > 100 )
   {
     auto enemy = entityManager.addEntity("enemy");
-    enemy->cShape = std::make_shared<CShape>(22, 5);
+    enemy->cShape = std::make_shared<CShape>(22, randomNumber(1, 8));
     int horPos = randomNumber(0,1024);
     int vertPos = randomNumber(0,768);
     int speed1 = randomNumber(0,10);
@@ -90,8 +103,14 @@ void Game::spawnEnemy()
     if(speed2 <= 5) speed1 *= -1;
     if(speed2 > 5) speed2 = speed2 - 5;
     enemy->cTransform = std::make_shared<CTransform>(Vec2(horPos,vertPos), Vec2(speed1,speed2), 11);
-    enemy->cShape->circle.setFillColor(sf::Color::Transparent);
-    enemy->cShape->circle.setOutlineThickness(5.f);
+    int r,g,b;
+    r = randomNumber(0, 255);
+    g = randomNumber(0, 255);
+    b = randomNumber(0, 255);
+    enemy->cShape->circle.setOutlineThickness(3.f);
+    enemy->cShape->circle.setOutlineColor(sf::Color(r,g,b));
+    enemy->cShape->circle.setFillColor(sf::Color(r,g,b));
+        
     m_lastEnemy = m_currentFrame;
 
   }

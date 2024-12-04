@@ -7,6 +7,7 @@
 #include <SFML/Window/Window.hpp>
 #include <cmath>
 #include <memory>
+#include "Utility.h"
 #include <iostream>
 
 
@@ -88,7 +89,11 @@ void sHandleMotion(EntityVec &vec)
     if(a->tag() == "enemy")
     {
       Vec2 futureLocation = a->cTransform->pos + a->cTransform->speed;
-
+      a->cShape->circle.setRotation(a->cShape->circle.getRotation() + 1);
+      if(a->cShape->circle.getRotation() == 360) a->cShape->circle.setRotation(0);
+      float reflection = randomNumber(10, 19) / 10.0;
+      float reflection2 = -1 * (2.0 - reflection);
+      reflection *= -1;
       if(futureLocation.x >= 1024 || futureLocation.x <= 0) a->cTransform->speed.x *= -1;
       if(futureLocation.y >= 768 || futureLocation.y <= 0) a->cTransform->speed.y *= -1;
     }

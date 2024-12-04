@@ -33,6 +33,7 @@ class Game
   void spawnEnemy();
   float distance(Vec2 first, Vec2 second);
   void sdetectCol();
+  void setupImGui();
 };
 
 
